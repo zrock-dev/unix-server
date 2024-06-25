@@ -21,7 +21,6 @@ static struct argp_option options[] = {
 
 /* Used by main to communicate with parse_opt. */
 struct arguments {
-  char *args[2]; /* arg1 & arg2 */
   int silent, verbose;
   char *output_file;
   int port;
@@ -48,21 +47,6 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
     arguments->port = atoi(arg);
     break;
 
-  case ARGP_KEY_ARG:
-    if (state->arg_num >= 2)
-      /* Too many arguments. */
-      argp_usage(state);
-
-    arguments->args[state->arg_num] = arg;
-
-    break;
-
-  case ARGP_KEY_END:
-    if (state->arg_num < 2)
-      /* Not enough arguments. */
-      argp_usage(state);
-    break;
-
   default:
     return ARGP_ERR_UNKNOWN;
   }
@@ -84,11 +68,6 @@ int main(int argc, char **argv) {
   /* Parse our arguments; every option seen by parse_opt will
      be reflected in arguments. */
   argp_parse(&argp, argc, argv, 0, 0, &arguments);
-
-  // printf("PORT = %s\nOUTPUT_FILE = %s\n"
-  //        "VERBOSE = %s\nSILENT = %s\n",
-  //        arguments.args[0], arguments.output_file,
-  //        arguments.verbose ? "yes" : "no", arguments.silent ? "yes" : "no");
 
   printf("Port %d", arguments.port);
 
