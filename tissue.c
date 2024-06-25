@@ -1,3 +1,4 @@
+#include "socket-inet-server.h"
 #include <argp.h>
 #include <stdlib.h>
 
@@ -16,7 +17,7 @@ static struct argp_option options[] = {
     {"quiet", 'q', 0, 0, "Don't produce any output"},
     {"silent", 's', 0, OPTION_ALIAS},
     {"output", 'o', "FILE", 0, "Output to FILE instead of standard output"},
-    {"port", 'p', "PORT", 0, "Listen on port"},
+    {"port", 'p', "PORT", 0, "Listen on port, default 9595"},
     {0}};
 
 /* Used by main to communicate with parse_opt. */
@@ -63,13 +64,14 @@ int main(int argc, char **argv) {
   arguments.silent = 0;
   arguments.verbose = 0;
   arguments.output_file = "-";
-  arguments.port = 8080;
+  arguments.port = 5040;
 
   /* Parse our arguments; every option seen by parse_opt will
      be reflected in arguments. */
   argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
   printf("Port %d", arguments.port);
+  socket_listen(arguments.port);
 
   exit(0);
 }
