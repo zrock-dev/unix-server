@@ -1,12 +1,12 @@
+#include "client_handler.h"
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <signal.h>
-#include <stdlib.h>
-#include "client_handler.h"
 #define MESSAGE_SIZE 128
 
 void sigint_handler(threads_id, is_running) {
@@ -69,7 +69,8 @@ int socket_listen(int port) {
       return 1;
     }
 
-    int t_status = pthread_create(&threads_id[current], NULL, &handle_client(client_socket_fd), NULL);
+    int t_status = pthread_create(&threads_id[current], NULL,
+                                  &handle_client(client_socket_fd), NULL);
     if (t_status == -1) {
       perror("Error creating thread.");
       return 1;

@@ -1,8 +1,8 @@
-#include <stdlib.h>
-#include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <stdlib.h>
 #include <string.h>
+#include <sys/socket.h>
 
 int handle_client(client_socket_fd) {
   char request[MESSAGE_SIZE];
@@ -14,7 +14,14 @@ int handle_client(client_socket_fd) {
   printf("Request from client: %s\n", request);
 
   char response[MESSAGE_SIZE];
-  strcpy(response, "Message got from client");
+  switch (request) {
+  case "getInfo":
+    strcpy(response, handleGetInfoRequest());
+    break;
+
+  default:
+    strcpy(response, "Unsoported request");
+  }
 
   send_message(response, client_socket_fd);
   close(client_socket_fd);
@@ -28,3 +35,5 @@ void send_message(char message, socket_fd) {
     return 1;
   }
 }
+
+char handleGetInfoRequest() { return "tissue v0.0.0-alpha"; }
