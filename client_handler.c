@@ -24,7 +24,11 @@ int handle_client(client_socket_fd) {
     break;
 
   case "getNumberOfPartitions":
-    strcpy(response, get_number_of_partitions());
+    strcpy(response, on_get_number_of_partitions());
+    break;
+
+  case "sshdRunning":
+    strcpy(response, on_ssh_running());
     break;
 
   default:
@@ -40,26 +44,26 @@ void send_message(char message, socket_fd) {
   int write_status = write(socket_fd, message, MESSAGE_SIZE);
   if (write_status == -1) {
     perror("Error at writing response");
-    return 1;
+    exit(1);
   }
 }
 
-char exec(char command, int buffer_size){
+char exec(char command, int buffer_size) {
   FILE *proc_pipe = popen(command, "r");
 
   char buffer[buffer_size];
-  fgets(buffer, sizeof(buffer), proc_pipe)
-  pclose(proc_pipe);
+  fgets(buffer, sizeof(buffer), proc_pipe) pclose(proc_pipe);
   return buffer;
 }
 
 char on_get_info_handler() { return "tissue v0.0.0-alpha"; }
 
-char on_get_kernel_version() {
-  return exec("/usr/bin/uname -r", 128);
-}
+char on_get_kernel_version() { return exec("/usr/bin/uname -r", 128); }
 
-char on_get_number_of_partitions(){
+char on_get_number_of_partitions() {
   return exec("/usr/bin/lsblk -l | /usr/bin/grep part | /usr/bin/wc -l", 128);
 }
 
+char on_get_kernel_version() {
+  return exec("/usr/bin/systemctl is-active sshd", 128);
+}
