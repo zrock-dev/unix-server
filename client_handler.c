@@ -23,6 +23,10 @@ int handle_client(client_socket_fd) {
     strcpy(response, on_get_kernel_version());
     break;
 
+  case "getNumberOfPartitions":
+    strcpy(response, get_number_of_partitions());
+    break;
+
   default:
     strcpy(response, "Unsoported request");
   }
@@ -40,12 +44,6 @@ void send_message(char message, socket_fd) {
   }
 }
 
-char on_get_info_handler() { return "tissue v0.0.0-alpha"; }
-
-char on_get_kernel_version() {
-  return exec("/usr/bin/uname -r", 128);
-}
-
 char exec(char command, int buffer_size){
   FILE *proc_pipe = popen(command, "r");
 
@@ -53,5 +51,15 @@ char exec(char command, int buffer_size){
   fgets(buffer, sizeof(buffer), proc_pipe)
   pclose(proc_pipe);
   return buffer;
+}
+
+char on_get_info_handler() { return "tissue v0.0.0-alpha"; }
+
+char on_get_kernel_version() {
+  return exec("/usr/bin/uname -r", 128);
+}
+
+char on_get_number_of_partitions(){
+  return exec("/usr/bin/lsblk -l | /usr/bin/grep part | /usr/bin/wc -l", 128);
 }
 
