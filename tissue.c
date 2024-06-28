@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
      be reflected in arguments. */
   argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
-  printf("Port %d", arguments.port);
+  printf("Port %d\n", arguments.port);
   socket_listen(arguments.port);
 
   exit(0);
